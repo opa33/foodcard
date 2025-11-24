@@ -51,7 +51,6 @@ export default function Roulette({ onFinish, tripleChance = 0 }: Props) {
     for (let i = 0; i < REPEAT; i++) arr.push(...foods);
     return arr;
   });
-
   const start = () => {
     if (spinning) return;
 
@@ -70,6 +69,7 @@ export default function Roulette({ onFinish, tripleChance = 0 }: Props) {
       ];
     }
 
+    // measure actual item height if possible
     let itemHeight = DEFAULT_ITEM_HEIGHT;
     const sampleReel = reelRefs.current[0];
     if (sampleReel && sampleReel.children.length > 0) {
@@ -89,6 +89,7 @@ export default function Roulette({ onFinish, tripleChance = 0 }: Props) {
     setKey((k) => k + 1);
     setSpinning(true);
 
+    // compute results and notify after animation
     const results = newStops.map((idx) => foods[idx]);
     const maxDuration = Math.max(...durations);
     setTimeout(() => {
@@ -114,6 +115,7 @@ export default function Roulette({ onFinish, tripleChance = 0 }: Props) {
       onFinish?.(results);
     }, Math.round(maxDuration * 1000) + 200);
 
+    // schedule snapping per-reel slightly after its animation finishes
     durations.forEach((d, i) => {
       const snapDelay = Math.round(d * 1000 + 80);
       const dist = newDistances[i];
@@ -136,9 +138,13 @@ export default function Roulette({ onFinish, tripleChance = 0 }: Props) {
             const currentTop = itemRect.top;
             const delta = currentTop - desiredTop;
             const finalY = -Math.round(dist - delta);
-            motionEl.style.transform = `translateY(${finalY}px)`;
+            (
+              motionEl as HTMLElement
+            ).style.transform = `translateY(${finalY}px)`;
           } else {
-            motionEl.style.transform = `translateY(-${Math.round(dist)}px)`;
+            (
+              motionEl as HTMLElement
+            ).style.transform = `translateY(-${Math.round(dist)}px)`;
           }
         }
       }, snapDelay);
