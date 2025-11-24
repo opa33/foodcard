@@ -56,3 +56,23 @@ body {
   min-height: 100vh;
 }
 
+/* Confetti animations */
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(120vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* Fallback gradient masks for older browsers (if mask-image unsupported) */
+.reel-fade-top,
+.reel-fade-bottom {
+  pointer-events: none;
+}

@@ -1,20 +1,12 @@
 import { useState } from "react";
 import { foods, type Food } from "../data/foods";
-import FoodCard from "../components/FoodCard";
-import { AnimatePresence } from "framer-motion";
-import { useSwipe } from "../hooks/useSwipe";
-import Button from "../components/Button";
+import Roulette from "../components/Roulette";
 
 export default function Home() {
-  const [food, setFood] = useState<Food | null>(
+  const [, setFood] = useState<Food | null>(
     () => foods[Math.floor(Math.random() * foods.length)]
   );
-  const { onTouchStart, onTouchEnd } = useSwipe();
-
-  const nextFood = () => {
-    const f = foods[Math.floor(Math.random() * foods.length)];
-    setFood(f);
-  };
+  const tripleChance = 10;
 
   return (
     <div
@@ -27,26 +19,21 @@ export default function Home() {
       <div className="flex items-center justify-center">
         <h1 className="text-2xl font-bold">Что сегодня кушаем?</h1>
       </div>
-      <div
-        style={{ perspective: 1200, width: "100%" }}
-        className="flex items-center justify-center mt-10"
-        onTouchStart={onTouchStart}
-        onTouchEnd={(e) => {
-          const direction = onTouchEnd(e);
-          if (direction) nextFood();
-        }}
-      >
-        <AnimatePresence mode="wait">
-          {food && <FoodCard key={food.name} food={food} />}
-        </AnimatePresence>
-      </div>
 
-      <div className="w-full flex justify-center text-center">
-        <div className="w-full max-w-xs">
-          <Button onClick={nextFood} className="mx-auto">
-            Фу...
-          </Button>
+      <div className="w-full mt-6 max-w-2xl">
+        <div className="flex items-center gap-4 mb-4">
+          <label className="font-medium">Шанс выпадения 3 одинаковых:</label>
+          <div className="w-12 text-right font-medium">{tripleChance}%</div>
         </div>
+
+        <Roulette
+          tripleChance={tripleChance}
+          onFinish={(results) => {
+            // show the middle result as selected
+            const middle = results[1] ?? results[0];
+            setFood(middle);
+          }}
+        />
       </div>
     </div>
   );
