@@ -10,11 +10,10 @@ const REPEAT = 8;
 function ReelItem({ food }: { food: Food }) {
   return (
     <div
-      className="w-full flex items-center justify-start gap-4 px-6"
+      className="w-full flex items-center justify-center gap-4 px-6"
       style={{ height: DEFAULT_ITEM_HEIGHT }}
     >
-      <div className="text-4xl pr-4">{food.emoji}</div>
-      <div className="text-lg font-medium text-gray-800">{food.emoji}</div>
+      <div className="text-4xl pr-4 ">{food.emoji}</div>
     </div>
   );
 }
@@ -89,7 +88,6 @@ export default function Roulette({ onFinish, tripleChance = 0 }: Props) {
     setKey((k) => k + 1);
     setSpinning(true);
 
-    // compute results and notify after animation
     const results = newStops.map((idx) => foods[idx]);
     const maxDuration = Math.max(...durations);
     setTimeout(() => {
