@@ -14,7 +14,7 @@ function ReelItem({ food }: { food: Food }) {
       style={{ height: DEFAULT_ITEM_HEIGHT }}
     >
       <div className="text-4xl pr-4">{food.emoji}</div>
-      <div className="text-lg font-medium text-gray-800">{food.name}</div>
+      <div className="text-lg font-medium text-gray-800">{food.emoji}</div>
     </div>
   );
 }
@@ -95,7 +95,7 @@ export default function Roulette({ onFinish, tripleChance = 0 }: Props) {
     setTimeout(() => {
       setSpinning(false);
       if (newStops[0] === newStops[1] && newStops[1] === newStops[2]) {
-        const colors = ["#EF4444", "#F59E0B", "#10B981", "#3B82F6", "#A78BFA"];
+        const colors = ["1"];
         const pieces = Array.from({ length: 60 }).map((_, i) => ({
           left: Math.random() * 100,
           delay: Math.random() * 0.5,
