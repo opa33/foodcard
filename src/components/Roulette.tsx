@@ -43,7 +43,8 @@ export default function Roulette({ onFinish, tripleChance = 0 }: Props) {
   const reelRefs = useRef<Array<HTMLDivElement | null>>([]);
   const reelContainers = useRef<Array<HTMLDivElement | null>>([]);
 
-  const durations = [5.0, 5.2, 5.4];
+  // Slightly shorter durations to reduce work on mobile while keeping the feel
+  const durations = [4.0, 4.2, 4.4];
 
   const reelArrays = Array.from({ length: 3 }).map(() => {
     const arr: Food[] = [];
@@ -68,7 +69,6 @@ export default function Roulette({ onFinish, tripleChance = 0 }: Props) {
       ];
     }
 
-    // measure actual item height if possible
     let itemHeight = DEFAULT_ITEM_HEIGHT;
     const sampleReel = reelRefs.current[0];
     if (sampleReel && sampleReel.children.length > 0) {
@@ -93,17 +93,6 @@ export default function Roulette({ onFinish, tripleChance = 0 }: Props) {
     setTimeout(() => {
       setSpinning(false);
       if (newStops[0] === newStops[1] && newStops[1] === newStops[2]) {
-        const colors = ["1"];
-        const pieces = Array.from({ length: 60 }).map((_, i) => ({
-          left: Math.random() * 100,
-          delay: Math.random() * 0.5,
-          duration: 1.5 + Math.random() * 1.5,
-          rotate: Math.random() * 360,
-          width: 10 + Math.random() * 10,
-          height: 6 + Math.random() * 10,
-          color: colors[i % colors.length],
-        }));
-        setConfettiPieces(pieces);
         setConfetti(true);
         setTimeout(() => {
           setConfetti(false);
@@ -113,7 +102,6 @@ export default function Roulette({ onFinish, tripleChance = 0 }: Props) {
       onFinish?.(results);
     }, Math.round(maxDuration * 1000) + 200);
 
-    // schedule snapping per-reel slightly after its animation finishes
     durations.forEach((d, i) => {
       const snapDelay = Math.round(d * 1000 + 80);
       const dist = newDistances[i];
@@ -168,26 +156,19 @@ export default function Roulette({ onFinish, tripleChance = 0 }: Props) {
             const outerStyle: React.CSSProperties = {
               height: DEFAULT_ITEM_HEIGHT * VISIBLE_COUNT,
               position: "relative",
-              WebkitMaskImage:
-                "linear-gradient(to bottom, rgba(0,0,0,0.25), rgba(0,0,0,1) 30%, rgba(0,0,0,1) 70%, rgba(0,0,0,0.25))",
-              maskImage:
-                "linear-gradient(to bottom, rgba(0,0,0,0.25), rgba(0,0,0,1) 30%, rgba(0,0,0,1) 70%, rgba(0,0,0,0.25))",
             };
 
             const centerOverlayStyle: React.CSSProperties = {
               position: "absolute",
-              left: 0,
-              right: 0,
+              left: 6,
+              right: 6,
               top: `calc(50% - ${DEFAULT_ITEM_HEIGHT / 2}px)`,
               height: DEFAULT_ITEM_HEIGHT,
               pointerEvents: "none",
-              borderRadius: 12,
-              margin: "0 6px",
-              boxShadow: "0 12px 30px rgba(2,6,23,0.16)",
-              border: "1px solid rgba(2,6,23,0.06)",
-              backdropFilter: "blur(6px)",
-              WebkitBackdropFilter: "blur(6px)",
-              transform: "translateZ(40px)",
+              borderRadius: 10,
+              border: "1px solid rgba(255,255,255,0.06)",
+              background:
+                "linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.00))",
             };
 
             return (
@@ -196,7 +177,7 @@ export default function Roulette({ onFinish, tripleChance = 0 }: Props) {
                 ref={(el) => {
                   reelContainers.current[i] = el;
                 }}
-                className="overflow-hidden rounded-lg bg-transparent"
+                className="reel-outer rounded-lg bg-transparent"
                 style={outerStyle}
               >
                 <motion.div
@@ -216,7 +197,7 @@ export default function Roulette({ onFinish, tripleChance = 0 }: Props) {
                   }
                 >
                   {items.map((f, idx) => (
-                    <div key={idx} className="border-b border-white/10">
+                    <div key={idx} className="border-b border-white/6">
                       <ReelItem food={f} />
                     </div>
                   ))}
@@ -225,11 +206,7 @@ export default function Roulette({ onFinish, tripleChance = 0 }: Props) {
                 <div
                   style={centerOverlayStyle}
                   className="flex items-center justify-center"
-                >
-                  <div
-                    style={{ width: "100%", height: "100%", borderRadius: 12 }}
-                  />
-                </div>
+                />
               </div>
             );
           })}

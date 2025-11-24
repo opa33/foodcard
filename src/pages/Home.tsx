@@ -21,9 +21,9 @@ export default function Home() {
       </div>
 
       <div className="w-full mt-6 max-w-2xl">
-        <div className="flex items-center gap-4 mb-4">
+        <div className="flex items-center gap-4 mb-4 items-center justify-center">
           <label className="font-medium">Шанс выпадения 3 одинаковых:</label>
-          <div className="w-12 text-right font-medium">{tripleChance}%</div>
+          <div className="w-12 text-center font-medium">{tripleChance}%</div>
         </div>
 
         <Roulette
